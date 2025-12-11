@@ -21,10 +21,11 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src",
-    "../frontend/src/config/api.ts"
+    "src"
   ],
   "exclude": [
-    "node_modules"
+    "../frontend",
+    "node_modules",
+    "../*"
   ]
 }
