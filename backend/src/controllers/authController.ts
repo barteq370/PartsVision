@@ -5,6 +5,9 @@ import { generateToken } from "../utils/jwt";
 
 const prisma = new PrismaClient();
 
+// =======================================
+// REGISTER
+// =======================================
 export const register = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -20,10 +23,14 @@ export const register = async (req: Request, res: Response) => {
 
         return res.status(201).json({ message: "User created" });
     } catch (err) {
+        console.error("Register error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
 
+// =======================================
+// LOGIN
+// =======================================
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -45,13 +52,23 @@ export const login = async (req: Request, res: Response) => {
             }
         });
     } catch (err) {
+        console.error("Login error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
 
+// =======================================
+// ME (CURRENT USER)
+// =======================================
 export const me = async (req: Request, res: Response) => {
     try {
-        const userId = req.user.userId;  // z tokena
+        // 🛑 TypeScript fix — upewniamy się, że req.user istnieje
+        if (!req.user?.userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const userId = req.user.userId;
+
         const user = await prisma.user.findUnique({
             where: { id: userId },
             select: {
@@ -66,7 +83,9 @@ export const me = async (req: Request, res: Response) => {
         }
 
         return res.json({ user });
+
     } catch (err) {
+        console.error("Me error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
