@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function ClientCreate() {
     const [name, setName] = useState("");
@@ -20,7 +21,7 @@ export default function ClientCreate() {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:4000/clients", {
+            const res = await fetch(`${API_URL}/clients`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

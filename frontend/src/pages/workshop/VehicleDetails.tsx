@@ -103,7 +103,7 @@ export default function VehicleDetails() {
 
             await fetchVehicle();
 
-            navigate(`/ workshop / orders / ${data.id}`);
+            navigate(`/workshop/orders/${data.id}`);
 
         } catch (err) {
             console.error(err);
@@ -134,7 +134,7 @@ export default function VehicleDetails() {
     return (
         <div>
             <Link
-                to={`/ workshop / clients / ${vehicle.clientId}`}
+                to={`/workshop/clients/${vehicle.clientId}`}
                 className="text-sm hover:text-blue-600"
             >
                 &larr; Powrót do klienta

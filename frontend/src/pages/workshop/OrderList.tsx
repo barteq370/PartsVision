@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function OrdersList() {
     const token = useAuthStore((s) => s.token);
@@ -10,7 +11,7 @@ export default function OrdersList() {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:4000/orders/workshop", {
+            const res = await fetch(`${API_URL}/orders/workshop`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (!res.ok) return;
