@@ -1,7 +1,8 @@
 type Props = {
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
 };
+
 
 export default function FeatureCard({ title, description }: Props) {
     return (

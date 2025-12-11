@@ -1,13 +1,9 @@
-type Props = {
-    title: string;
-    description: string;
-};
-
-export default function FeatureCard({ title, description }: Props) {
+export default function Footer() {
     return (
-        <div className="p-6 rounded-xl shadow bg-card">
-            <h3 className="text-xl font-semibold mb-2 text-main">{title}</h3>
-            <p className="text-secondary">{description}</p>
-        </div>
+        <footer className="px-6 py-8 bg-card border-t border-theme">
+            <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-around items-center gap-4">
+                <div className="text-sm text-secondary">© {new Date().getFullYear()} PartsVision · Bartosz Marek · IC API</div>
+            </div>
+        </footer>
     );
 }
