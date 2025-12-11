@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function OrderDetails() {
     const { orderId } = useParams();
@@ -17,7 +18,7 @@ export default function OrderDetails() {
     const fetchOrder = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:4000/orders/${orderId}`, {
+            const res = await fetch(`${API_URL}/orders/${orderId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (!res.ok) {
@@ -38,7 +39,7 @@ export default function OrderDetails() {
     const updateStatus = async (newStatus: string) => {
         setStatusUpdating(true);
         try {
-            const res = await fetch(`http://localhost:4000/orders/${orderId}/status`, {
+            const res = await fetch(`${API_URL}/orders/${orderId}/status`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ status: newStatus })
@@ -55,7 +56,7 @@ export default function OrderDetails() {
     const addItem = async () => {
         if (!itemName.trim()) { alert("Nazwa wymagana"); return; }
         try {
-            const res = await fetch(`http://localhost:4000/orders/${orderId}/items`, {
+            const res = await fetch(`${API_URL}/orders/${orderId}/items`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ name: itemName, oeNumber: "", quantity: Number(itemQty), price: Number(itemPrice) })
@@ -71,7 +72,7 @@ export default function OrderDetails() {
     const deleteItem = async (itemId: number) => {
         if (!confirm("Usuń pozycję?")) return;
         try {
-            const res = await fetch(`http://localhost:4000/orders/items/${itemId}`, {
+            const res = await fetch(`${API_URL}/orders/items/${itemId}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` }
             });

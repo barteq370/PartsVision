@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function ClientDetails() {
     const { clientId } = useParams();
@@ -13,7 +14,7 @@ export default function ClientDetails() {
 
     const fetchClient = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/clients/${clientId}`, {
+            const res = await fetch(`${API_URL}/clients/${clientId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -34,7 +35,7 @@ export default function ClientDetails() {
 
     const fetchVehicles = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/vehicles/client/${clientId}`, {
+            const res = await fetch(`${API_URL}/vehicles/client/${clientId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -72,7 +73,7 @@ export default function ClientDetails() {
         if (!confirmDelete) return;
 
         try {
-            const res = await fetch(`http://localhost:4000/clients/${clientId}`, {
+            const res = await fetch(`${API_URL}/clients/${clientId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`

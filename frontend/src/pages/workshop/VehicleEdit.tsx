@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function VehicleEdit() {
     const { vehicleId } = useParams();
@@ -20,7 +21,7 @@ export default function VehicleEdit() {
     // ---------------------------------------
     const loadVehicle = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/vehicles/${vehicleId}`, {
+            const res = await fetch(`${API_URL}/vehicles/${vehicleId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -55,7 +56,7 @@ export default function VehicleEdit() {
         setSaving(true);
 
         try {
-            const res = await fetch(`http://localhost:4000/vehicles/${vehicleId}`, {
+            const res = await fetch(`${API_URL}/vehicles/${vehicleId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

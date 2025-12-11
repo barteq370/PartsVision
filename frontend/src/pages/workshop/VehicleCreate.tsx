@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function VehicleCreate() {
     const { clientId } = useParams();
@@ -22,7 +23,7 @@ export default function VehicleCreate() {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:4000/vehicles", {
+            const res = await fetch(`${API_URL}/vehicles`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -43,7 +44,7 @@ export default function VehicleCreate() {
             }
 
             // po sukcesie wracamy do szczegółów klienta
-            navigate(`/workshop/clients/${clientId}`);
+            navigate(`/ workshop / clients / ${clientId}`);
 
         } catch (err) {
             console.error("Error creating vehicle:", err);

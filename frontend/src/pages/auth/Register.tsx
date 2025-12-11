@@ -14,9 +14,6 @@ export default function Register() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // -----------------------------
-        // Walidacja pól
-        // -----------------------------
         if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
             setError("Wszystkie pola są wymagane.");
             return;
@@ -26,10 +23,6 @@ export default function Register() {
             setError("Hasła muszą być identyczne.");
             return;
         }
-
-        // -----------------------------
-        // Próba rejestracji użytkownika
-        // -----------------------------
         const success = await register(email, password);
 
         if (!success) {

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { API_URL } from "../config/api";
 
 // Typ użytkownika zwracanego przez backend
 interface User {
@@ -28,7 +29,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // ------------------------------------------------
     login: async (email: string, password: string) => {
         try {
-            const res = await fetch("http://localhost:4000/auth/login", {
+            const res = await fetch(`${API_URL}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -57,7 +58,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // ------------------------------------------------
     register: async (email: string, password: string) => {
         try {
-            const res = await fetch("http://localhost:4000/auth/register", {
+            const res = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -93,7 +94,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         if (!token) return;
 
         try {
-            const res = await fetch("http://localhost:4000/auth/me", {
+            const res = await fetch(`${API_URL}/auth/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

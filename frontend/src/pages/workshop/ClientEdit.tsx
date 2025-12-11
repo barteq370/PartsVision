@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function ClientEdit() {
     const { clientId } = useParams();
@@ -18,7 +19,7 @@ export default function ClientEdit() {
     // ----------------------------------------------------
     const fetchClient = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/clients/${clientId}`, {
+            const res = await fetch(`${API_URL}/clients/${clientId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -53,7 +54,7 @@ export default function ClientEdit() {
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const res = await fetch(`http://localhost:4000/clients/${clientId}`, {
+        const res = await fetch(`${API_URL}/clients/${clientId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

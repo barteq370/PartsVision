@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function VehicleDetails() {
     const { vehicleId } = useParams();
@@ -19,7 +20,7 @@ export default function VehicleDetails() {
     // -------------------------
     const fetchVehicle = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/vehicles/${vehicleId}`, {
+            const res = await fetch(`${API_URL}/vehicles/${vehicleId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -47,7 +48,7 @@ export default function VehicleDetails() {
         if (!confirmDelete) return;
 
         try {
-            const res = await fetch(`http://localhost:4000/vehicles/${vehicleId}`, {
+            const res = await fetch(`${API_URL}/vehicles/${vehicleId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -79,7 +80,7 @@ export default function VehicleDetails() {
         setOrdersLoading(true);
 
         try {
-            const res = await fetch("http://localhost:4000/orders", {
+            const res = await fetch(`${API_URL}/orders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -102,7 +103,7 @@ export default function VehicleDetails() {
 
             await fetchVehicle();
 
-            navigate(`/workshop/orders/${data.id}`);
+            navigate(`/ workshop / orders / ${data.id}`);
 
         } catch (err) {
             console.error(err);
@@ -133,7 +134,7 @@ export default function VehicleDetails() {
     return (
         <div>
             <Link
-                to={`/workshop/clients/${vehicle.clientId}`}
+                to={`/ workshop / clients / ${vehicle.clientId}`}
                 className="text-sm hover:text-blue-600"
             >
                 &larr; Powrót do klienta
@@ -156,7 +157,7 @@ export default function VehicleDetails() {
                 <div className="text-gray-700 mb-4">
                     Właściciel:{" "}
                     <Link
-                        to={`/workshop/clients/${vehicle.clientId}`}
+                        to={`/ workshop / clients / ${vehicle.clientId}`}
                         className="font-medium text-blue-600"
                     >
                         {vehicle.client.name}
@@ -165,7 +166,7 @@ export default function VehicleDetails() {
 
                 <div className="flex gap-4">
                     <Link
-                        to={`/workshop/vehicles/${vehicle.id}/edit`}
+                        to={`/ workshop / vehicles / ${vehicle.id} / edit`}
                         className="btn-primary"
                     >
                         Edytuj
@@ -235,7 +236,7 @@ export default function VehicleDetails() {
                             </div>
 
                             <Link
-                                to={`/workshop/orders/${order.id}`}
+                                to={`/ workshop / orders / ${order.id}`}
                                 className="text-sm hover:text-blue-600"
                             >
                                 Szczegóły

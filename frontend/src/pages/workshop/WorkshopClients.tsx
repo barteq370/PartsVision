@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function WorkshopClients() {
     const [clients, setClients] = useState([]);
@@ -13,7 +14,7 @@ export default function WorkshopClients() {
     // ------------------------------------------------
     const fetchClients = async () => {
         try {
-            const res = await fetch("http://localhost:4000/clients", {
+            const res = await fetch(`${API_URL}/clients`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -74,7 +75,7 @@ export default function WorkshopClients() {
 
                             <div className="flex items-center gap-3">
                                 <Link
-                                    to={`/workshop/clients/${client.id}`}
+                                    to={`/ workshop / clients / ${client.id}`}
                                     className="text-sm hover:text-blue-600"
                                 >
                                     Szczegóły

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { API_URL } from "../../config/api";
 
 export default function WorkshopSetup() {
     const [name, setName] = useState("");
@@ -17,7 +18,7 @@ export default function WorkshopSetup() {
             return;
         }
 
-        const res = await fetch("http://localhost:4000/workshops/create", {
+        const res = await fetch(`${API_URL}/workshops/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
