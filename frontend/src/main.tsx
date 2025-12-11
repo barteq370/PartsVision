@@ -86,9 +86,10 @@ const router = createBrowserRouter([
       // -----------------------------
       { path: "clients", element: <WorkshopClients /> },
       { path: "clients/new", element: <ClientCreate /> },
+      { path: "clients/:clientId/vehicles/new", element: <VehicleCreate /> },
       { path: "clients/:clientId/edit", element: <ClientEdit /> },
       { path: "clients/:clientId", element: <ClientDetails /> },
-      { path: "clients/:clientId/vehicles/new", element: <VehicleCreate /> },
+
 
       { path: "vehicles/:vehicleId", element: <VehicleDetails /> },
       { path: "vehicles/:vehicleId/edit", element: <VehicleEdit /> },

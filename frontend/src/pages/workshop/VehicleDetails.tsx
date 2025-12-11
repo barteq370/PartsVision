@@ -157,7 +157,7 @@ export default function VehicleDetails() {
                 <div className="text-gray-700 mb-4">
                     Właściciel:{" "}
                     <Link
-                        to={`/ workshop / clients / ${vehicle.clientId}`}
+                        to={`/workshop/clients/${vehicle.clientId}`}
                         className="font-medium text-blue-600"
                     >
                         {vehicle.client.name}
@@ -166,7 +166,7 @@ export default function VehicleDetails() {
 
                 <div className="flex gap-4">
                     <Link
-                        to={`/ workshop / vehicles / ${vehicle.id} / edit`}
+                        to={`/workshop/vehicles/${vehicle.id}/edit`}
                         className="btn-primary"
                     >
                         Edytuj
@@ -236,7 +236,7 @@ export default function VehicleDetails() {
                             </div>
 
                             <Link
-                                to={`/ workshop / orders / ${order.id}`}
+                                to={`/workshop/orders/${order.id}`}
                                 className="text-sm hover:text-blue-600"
                             >
                                 Szczegóły

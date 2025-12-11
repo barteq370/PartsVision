@@ -75,7 +75,7 @@ export default function WorkshopClients() {
 
                             <div className="flex items-center gap-3">
                                 <Link
-                                    to={`/ workshop / clients / ${client.id}`}
+                                    to={`/workshop/clients/${client.id}`}
                                     className="text-sm hover:text-blue-600"
                                 >
                                     Szczegóły
