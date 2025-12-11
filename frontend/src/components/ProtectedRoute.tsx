@@ -1,26 +1,22 @@
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import React from "react";
 
-interface Props {
-    children: React.ReactNode;
-    role?: string;
-}
-
-export default function ProtectedRoute({ children, role }: Props) {
+export default function ProtectedRoute({ children, role }: any) {
     const token = useAuthStore((s) => s.token);
     const user = useAuthStore((s) => s.user);
+    const isInitialized = useAuthStore((s) => s.isInitialized);
 
-    // niezalogowany
-    if (!token) return <Navigate to="/login" replace />;
-
-    // fetchMe jeszcze się ładuje
-    if (token && !user) return <div>Ładowanie...</div>;
-
-    // niewłaściwa rola
-    if (role && user?.role !== role) {
-        return <Navigate to="/setup" replace />;
+    if (!isInitialized) {
+        return <div>Ładowanie...</div>;
     }
 
-    return <>{children}</>;
+    if (!token) {
+        return <Navigate to="/login" replace />;
+    }
+
+    if (role && user?.role !== role) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return children;
 }

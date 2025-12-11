@@ -11,34 +11,23 @@ export default function ClientEdit() {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
-
     const [loading, setLoading] = useState(true);
 
-    // ----------------------------------------------------
-    // 1. Pobieramy obecne dane klienta i ustawiamy w formie
-    // ----------------------------------------------------
     const fetchClient = async () => {
         try {
             const res = await fetch(`${API_URL}/clients/${clientId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
-
             if (!res.ok) {
                 navigate("/workshop/clients");
                 return;
             }
-
             const data = await res.json();
-
-            // ustawiamy dane w formularzu
             setName(data.name);
             setPhone(data.phone);
             setEmail(data.email);
-
         } catch (err) {
-            console.error("Error loading client:", err);
+            console.error(err);
         } finally {
             setLoading(false);
         }
@@ -48,25 +37,13 @@ export default function ClientEdit() {
         fetchClient();
     }, [clientId]);
 
-    // ----------------------------------------------------
-    // 2. Wysyłanie PUT do backendu
-    // ----------------------------------------------------
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
-
         const res = await fetch(`${API_URL}/clients/${clientId}`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                name,
-                phone,
-                email
-            })
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ name, phone, email })
         });
-
         if (res.ok) {
             navigate(`/workshop/clients/${clientId}`);
         } else {
@@ -74,49 +51,29 @@ export default function ClientEdit() {
         }
     };
 
-    // ----------------------------------------------------
-    // 3. Loading state
-    // ----------------------------------------------------
     if (loading) return <div>Ładowanie...</div>;
 
-    // ----------------------------------------------------
-    // 4. UI formularza edycji
-    // ----------------------------------------------------
     return (
-        <div className="max-w-lg bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Edytuj klienta</h2>
+        <div className="max-w-lg bg-card p-6 rounded shadow">
+            <h2 className="text-xl font-semibold mb-4 text-main">Edytuj klienta</h2>
 
             <form className="space-y-4" onSubmit={handleUpdate}>
                 <div>
-                    <label className="block text-sm mb-1">Imię i nazwisko</label>
-                    <input
-                        className="w-full p-3 border rounded"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
+                    <label className="block text-sm mb-1 text-main">Imię i nazwisko</label>
+                    <input className="w-full p-3 border rounded bg-card text-main" value={name} onChange={(e) => setName(e.target.value)} required />
                 </div>
 
                 <div>
-                    <label className="block text-sm mb-1">Telefon</label>
-                    <input
-                        className="w-full p-3 border rounded"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        required
-                    />
+                    <label className="block text-sm mb-1 text-main">Telefon</label>
+                    <input className="w-full p-3 border rounded bg-card text-main" value={phone} onChange={(e) => setPhone(e.target.value)} required />
                 </div>
 
                 <div>
-                    <label className="block text-sm mb-1">Email</label>
-                    <input
-                        className="w-full p-3 border rounded"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <label className="block text-sm mb-1 text-main">Email</label>
+                    <input className="w-full p-3 border rounded bg-card text-main" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
 
-                <button className="btn-primary w-full">Zapisz zmiany</button>
+                <button className="w-full px-6 py-3 rounded-lg text-white" style={{ backgroundColor: "var(--accent)" }}>Zapisz zmiany</button>
             </form>
         </div>
     );

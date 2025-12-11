@@ -1,0 +1,17 @@
+"filename", "language", "TypeScript", "comment", "blank", "total"
+"c:\Users\barte\Desktop\PartsVision\backend\src\controllers\authController.ts", "TypeScript", 64, 10, 18, 92
+"c:\Users\barte\Desktop\PartsVision\backend\src\controllers\clientController.ts", "TypeScript", 142, 3, 46, 191
+"c:\Users\barte\Desktop\PartsVision\backend\src\controllers\orderController.ts", "TypeScript", 189, 0, 45, 234
+"c:\Users\barte\Desktop\PartsVision\backend\src\controllers\vehicleController.ts", "TypeScript", 159, 0, 45, 204
+"c:\Users\barte\Desktop\PartsVision\backend\src\controllers\workshopController.ts", "TypeScript", 27, 2, 9, 38
+"c:\Users\barte\Desktop\PartsVision\backend\src\index.ts", "TypeScript", 18, 1, 5, 24
+"c:\Users\barte\Desktop\PartsVision\backend\src\middleware\authMiddleware.ts", "TypeScript", 15, 0, 5, 20
+"c:\Users\barte\Desktop\PartsVision\backend\src\routes\auth.ts", "TypeScript", 8, 0, 4, 12
+"c:\Users\barte\Desktop\PartsVision\backend\src\routes\clientRoutes.ts", "TypeScript", 10, 0, 5, 15
+"c:\Users\barte\Desktop\PartsVision\backend\src\routes\orderRoutes.ts", "TypeScript", 24, 0, 5, 29
+"c:\Users\barte\Desktop\PartsVision\backend\src\routes\vehicleRoutes.ts", "TypeScript", 11, 0, 5, 16
+"c:\Users\barte\Desktop\PartsVision\backend\src\routes\workshop.ts", "TypeScript", 6, 0, 4, 10
+"c:\Users\barte\Desktop\PartsVision\backend\src\types\express.d.ts", "TypeScript", 14, 0, 3, 17
+"c:\Users\barte\Desktop\PartsVision\backend\src\utils\hash.ts", "TypeScript", 8, 0, 3, 11
+"c:\Users\barte\Desktop\PartsVision\backend\src\utils\jwt.ts", "TypeScript", 8, 0, 4, 12
+"Total", "-", 703, 16, 206, 925

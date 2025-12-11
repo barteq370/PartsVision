@@ -1,17 +1,16 @@
 import { create } from "zustand";
 import { API_URL } from "../config/api";
 
-// Typ użytkownika zwracanego przez backend
 interface User {
     id: number;
     email: string;
     role: string;
 }
 
-// Typ całego store
 interface AuthState {
     token: string | null;
     user: User | null;
+    isInitialized: boolean;
 
     login: (email: string, password: string) => Promise<boolean>;
     register: (email: string, password: string) => Promise<boolean>;
@@ -23,11 +22,9 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
     token: localStorage.getItem("token") || null,
     user: null,
+    isInitialized: false,
 
-    // ------------------------------------------------
-    // LOGIN
-    // ------------------------------------------------
-    login: async (email: string, password: string) => {
+    login: async (email, password) => {
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: "POST",
@@ -39,7 +36,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
             const data = await res.json();
 
-            // zapis tokena w localStorage
             localStorage.setItem("token", data.token);
 
             set({
@@ -53,10 +49,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
     },
 
-    // ------------------------------------------------
-    // REGISTER
-    // ------------------------------------------------
-    register: async (email: string, password: string) => {
+    register: async (email, password) => {
         try {
             const res = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
@@ -66,38 +59,24 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
             if (!res.ok) return false;
 
-            // auto-logowanie
-            const success = await get().login(email, password);
-            return success;
+            return await get().login(email, password);
         } catch {
             return false;
         }
     },
 
-    // ------------------------------------------------
-    // LOGOUT
-    // ------------------------------------------------
     logout: () => {
         localStorage.removeItem("token");
-
-        set({
-            token: null,
-            user: null
-        });
+        set({ token: null, user: null });
     },
 
-    // ------------------------------------------------
-    // FETCH CURRENT USER (po odświeżeniu lub wejściu na panel)
-    // ------------------------------------------------
     fetchMe: async () => {
         const token = get().token;
         if (!token) return;
 
         try {
             const res = await fetch(`${API_URL}/auth/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
 
             if (!res.ok) {
@@ -105,23 +84,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 return;
             }
 
-            // backend zwraca { user: {...} }
             const data = await res.json();
             set({ user: data.user });
-        } catch (err) {
+        } catch {
             get().logout();
         }
     },
 
-    // ------------------------------------------------
-    // INITIALIZE (automatyczne logowanie po refreshu)
-    // ------------------------------------------------
     initialize: async () => {
         const token = localStorage.getItem("token");
-        if (!token) return;
 
-        set({ token });
+        if (token) {
+            set({ token });
+            await get().fetchMe();
+        }
 
-        await get().fetchMe();
+        set({ isInitialized: true });
     }
 }));

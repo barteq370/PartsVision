@@ -1,6 +1,112 @@
 @import "tailwindcss";
 
-@import "./styles/base.css";
-@import "./styles/components.css";
-@import "./styles/utilities.css";
-@import "./styles/pages/landing.css";
+/* =======================================================
+   DESIGN TOKENS — ODTWORZONE 1:1 Z Oryginalnego Tailwinda
+   ======================================================= */
+
+@layer base {
+    :root {
+        /* Jasny motyw */
+        --bg-main: #f9fafb;
+        /* bg-gray-50 */
+        --bg-card: #ffffff;
+        /* bg-white */
+        --bg-muted: #f3f4f6;
+        /* bg-gray-100 */
+        --border: #e5e7eb;
+        /* border-gray-200 */
+
+        --text-main: #111827;
+        /* text-gray-900 */
+        --text-secondary: #6b7280;
+        /* text-gray-500/600 */
+
+        --accent: #2563eb;
+        /* blue-600 */
+        --accent-hover: #1d4ed8;
+        /* blue-700 */
+
+        --danger: #dc2626;
+        /* red-600 */
+        --danger-hover: #b91c1c;
+        /* red-700 */
+    }
+
+    [data-theme="dark"] {
+        /* Ciemny motyw — 1:1 jak twój stary Tailwind */
+        --bg-main: #0f172a;
+        /* dark:bg-gray-900 */
+        --bg-card: #1e293b;
+        /* dark:bg-gray-800 */
+        --bg-muted: #334155;
+        /* dark:bg-gray-700 */
+        --border: #475569;
+        /* dark:border-gray-700 */
+
+        --text-main: #f3f4f6;
+        /* dark:text-gray-100 */
+        --text-secondary: #94a3b8;
+        /* dark:text-gray-400 */
+
+        --accent: #3b82f6;
+        /* blue-500/600 */
+        --accent-hover: #60a5fa;
+        /* blue-400 */
+
+        --danger: #ef4444;
+        /* red-500 */
+        --danger-hover: #dc2626;
+        /* red-600 */
+    }
+}
+
+/* =======================================================
+   UTYLITARY UCZCIWIE ODWZOROWUJĄCE TWÓJ STYL
+   (NIE ZMIENIAM WYGLĄDU, NIE WPROWADZAM NOWYCH KOMPONENTÓW)
+   ======================================================= */
+
+@layer utilities {
+    .text-main {
+        color: var(--text-main);
+    }
+
+    .text-secondary {
+        color: var(--text-secondary);
+    }
+
+    .bg-main {
+        background-color: var(--bg-main);
+    }
+
+    .bg-card {
+        background-color: var(--bg-card);
+    }
+
+    .bg-muted {
+        background-color: var(--bg-muted);
+    }
+
+    .border-theme {
+        border-color: var(--border);
+    }
+
+    .hover-bg-muted:hover {
+        background-color: var(--bg-muted);
+    }
+}
+
+
+.input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
