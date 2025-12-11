@@ -44,7 +44,7 @@ export default function VehicleCreate() {
             }
 
             // po sukcesie wracamy do szczegółów klienta
-            navigate(`/workshop /clients/${clientId}`);
+            navigate(`/workshop/clients/${clientId}`);
 
         } catch (err) {
             console.error("Error creating vehicle:", err);

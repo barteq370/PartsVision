@@ -21,7 +21,8 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src"
+    "src",
+    "../frontend/src/config/api.ts"
   ],
   "exclude": [
     "node_modules"
