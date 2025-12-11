@@ -1,0 +1,64 @@
+# ---------------------------------------
+# LOGI
+# ---------------------------------------
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---------------------------------------
+# NODE MODULES
+# ---------------------------------------
+node_modules/
+
+# ---------------------------------------
+# VITE / REACT BUILD
+# ---------------------------------------
+dist/
+dist-ssr/
+*.local
+
+# ---------------------------------------
+# BACKEND BUILD (NA PRZYSZŁOŚĆ)
+# ---------------------------------------
+backend/dist/
+*.tsbuildinfo
+
+# ---------------------------------------
+# SYSTEM / EDITOR FILES
+# ---------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ---------------------------------------
+# ENV FILES (NIGDY NIE NA GITHUB!)
+# ---------------------------------------
+.env
+.env.local
+.env.development
+.env.production
+backend/.env
+frontend/.env
+
+# ---------------------------------------
+# PRISMA / BAZY DANYCH
+# ---------------------------------------
+*.db
+*.sqlite
+prisma/dev.db
+backend/prisma/dev.db
+
+# ---------------------------------------
+# PRISMA CLIENT (GENERATED CODE)
+# ---------------------------------------
+backend/node_modules/.prisma/

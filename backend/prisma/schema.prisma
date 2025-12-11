@@ -1,0 +1,69 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  passwordHash String
+  role         String     @default("USER")
+  workshops    Workshop[]
+}
+
+model Workshop {
+  id      Int      @id @default(autoincrement())
+  name    String
+  userId  Int
+  user    User     @relation(fields: [userId], references: [id])
+  clients Client[]
+  orders  Order[]
+}
+
+model Client {
+  id         Int       @id @default(autoincrement())
+  name       String
+  phone      String
+  email      String
+  workshopId Int
+  workshop   Workshop  @relation(fields: [workshopId], references: [id])
+  vehicles   Vehicle[]
+}
+
+model Vehicle {
+  id       Int     @id @default(autoincrement())
+  vin      String  @unique
+  brand    String
+  model    String
+  year     String
+  clientId Int
+  client   Client  @relation(fields: [clientId], references: [id])
+  orders   Order[]
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  description String
+  status      String      @default("PENDING")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  vehicleId   Int
+  vehicle     Vehicle     @relation(fields: [vehicleId], references: [id])
+  workshopId  Int
+  workshop    Workshop    @relation(fields: [workshopId], references: [id])
+  items       OrderItem[]
+}
+
+model OrderItem {
+  id       Int    @id @default(autoincrement())
+  name     String
+  oeNumber String
+  quantity Int
+  price    Int
+  orderId  Int
+  order    Order  @relation(fields: [orderId], references: [id])
+}
