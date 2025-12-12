@@ -5,9 +5,6 @@ import { generateToken } from "../utils/jwt";
 
 const prisma = new PrismaClient();
 
-// =======================================
-// REGISTER
-// =======================================
 export const register = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -28,9 +25,6 @@ export const register = async (req: Request, res: Response) => {
     }
 };
 
-// =======================================
-// LOGIN
-// =======================================
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -57,12 +51,9 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-// =======================================
-// ME (CURRENT USER)
-// =======================================
+
 export const me = async (req: Request, res: Response) => {
     try {
-        // 🛑 TypeScript fix — upewniamy się, że req.user istnieje
         if (!req.user?.userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }

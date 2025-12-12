@@ -86,9 +86,6 @@ export const getClient = async (req: Request, res: Response) => {
             return res.status(403).json({ message: "Forbidden" });
         }
 
-        // powiązane pojazdy
-        // const clientWithVehicles = await prisma.client.findUnique({ where: { id: clientId }, include: { vehicles: true } });
-        // return res.json(clientWithVehicles);
 
 
         return res.json(client);
