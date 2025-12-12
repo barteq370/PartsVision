@@ -27,12 +27,6 @@ export default function Landing() {
                             Zacznij teraz
                         </Link>
 
-                        <a
-                            href="#how"
-                            className="px-6 py-3 rounded-lg text-lg border border-theme bg-card text-main hover-bg-muted transition"
-                        >
-                            Jak to działa
-                        </a>
                     </div>
                 </div>
             </header>
@@ -57,7 +51,7 @@ export default function Landing() {
                     </div>
                 </section>
 
-                <section id="forwhom" className="px-6 py-16 max-w-6xl mx-auto">
+                <section className="px-6 py-16 max-w-6xl mx-auto">
                     <h2 className="text-center text-3xl font-semibold mb-12">Dla kogo?</h2>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">

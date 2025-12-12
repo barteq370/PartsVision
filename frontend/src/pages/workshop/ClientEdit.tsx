@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { API_URL } from "../../config/api";
@@ -15,11 +15,9 @@ export default function ClientEdit() {
     const [loading, setLoading] = useState(true);
     const [errors, setErrors] = useState<{ name?: string; phone?: string; email?: string }>({});
 
-    const fetchClient = async () => {
+    const fetchClient = useCallback(async () => {
         try {
-            const res = await fetch(`${API_URL}/clients/${clientId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await fetch(`${API_URL}/clients/${clientId}`, { headers: { Authorization: `Bearer ${token}` } });
             if (!res.ok) {
                 navigate("/workshop/clients");
                 return;
@@ -33,13 +31,13 @@ export default function ClientEdit() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [clientId, token, navigate]);
 
     useEffect(() => {
         fetchClient();
-    }, [clientId]);
+    }, [fetchClient]);
 
-    const handleUpdate = async (e: React.FormEvent) => {
+    const handleUpdate = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         const eName = validateName(name);
         const ePhone = validatePhone(phone);
@@ -48,22 +46,15 @@ export default function ClientEdit() {
         if (eName || ePhone || eEmail) return;
         const res = await fetch(`${API_URL}/clients/${clientId}`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                name,
-                phone,
-                email
-            })
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ name, phone, email })
         });
         if (res.ok) {
             navigate(`/workshop/clients/${clientId}`);
         } else {
             alert("Nie udało się zaktualizować klienta.");
         }
-    };
+    }, [name, phone, email, clientId, token, navigate]);
 
     if (loading) return <div>Ładowanie...</div>;
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { API_URL } from "../../config/api";
@@ -17,7 +17,7 @@ export default function VehicleEdit() {
     const [saving, setSaving] = useState(false);
     const [errors, setErrors] = useState<{ vin?: string; brand?: string; model?: string; year?: string }>({});
 
-    const loadVehicle = async () => {
+    const loadVehicle = useCallback(async () => {
         try {
             const res = await fetch(`${API_URL}/vehicles/${vehicleId}`, { headers: { Authorization: `Bearer ${token}` } });
             if (!res.ok) {
@@ -34,13 +34,13 @@ export default function VehicleEdit() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [vehicleId, token, navigate]);
 
     useEffect(() => {
         loadVehicle();
-    }, [vehicleId]);
+    }, [loadVehicle]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         const eVin = validateVIN(vin);
         const eBrand = validateName(brand);
@@ -52,16 +52,8 @@ export default function VehicleEdit() {
         try {
             const res = await fetch(`${API_URL}/vehicles/${vehicleId}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    vin,
-                    brand,
-                    model,
-                    year
-                })
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ vin, brand, model, year })
             });
             if (!res.ok) {
                 alert("Nie udało się zapisać zmian.");
@@ -73,7 +65,7 @@ export default function VehicleEdit() {
         } finally {
             setSaving(false);
         }
-    };
+    }, [vin, brand, model, year, vehicleId, token, navigate]);
 
     if (loading) return <div>Ładowanie pojazdu...</div>;
 

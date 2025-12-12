@@ -30,7 +30,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/useAuthStore";
 import ClientList from "./pages/workshop/ClientList";
 import VehiclesList from "./pages/workshop/VehicleList";
-import OrderCreate from "./pages/workshop/OrderCreate";
+
 
 
 // InitAuth - token dane użytkownika
@@ -80,7 +80,6 @@ const router = createBrowserRouter([
 
       // ZLECENIA
       { path: "orders", element: <OrdersList /> },
-      { path: "orders/create", element: <OrderCreate /> },
       { path: "orders/:orderId", element: <OrderDetails /> },
     ],
   },

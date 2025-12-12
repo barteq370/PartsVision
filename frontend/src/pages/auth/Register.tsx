@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { validateEmail, validatePassword, validateConfirmPassword } from "../../../utils/validators";
@@ -13,8 +13,9 @@ export default function Register() {
     const register = useAuthStore((state) => state.register);
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
         const eEmail = validateEmail(email);
         const ePass = validatePassword(password);
         const eConfirm = validateConfirmPassword(password, confirmPassword);
@@ -26,7 +27,7 @@ export default function Register() {
             return;
         }
         navigate("/setup");
-    };
+    }, [email, password, confirmPassword, register, navigate]);
 
     return (
         <div className="max-w-md mx-auto mt-20 bg-card p-8 rounded-xl shadow">
@@ -53,9 +54,7 @@ export default function Register() {
 
                 {error && <p className="text-danger text-sm">{error}</p>}
 
-                <button className="w-full px-6 py-3 rounded-lg text-white" style={{ backgroundColor: "var(--accent)" }}>
-                    Utwórz konto
-                </button>
+                <button className="w-full px-6 py-3 rounded-lg text-white" style={{ backgroundColor: "var(--accent)" }}>Utwórz konto</button>
             </form>
 
             <div className="mt-4 text-sm text-secondary text-center">

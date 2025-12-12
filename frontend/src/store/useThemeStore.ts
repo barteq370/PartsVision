@@ -7,15 +7,13 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-    dark: localStorage.getItem("dark") === "false",
+    dark: localStorage.getItem("dark") === "true",
 
     toggle: () =>
         set((state) => {
             const newVal = !state.dark;
             localStorage.setItem("dark", String(newVal));
-
             document.documentElement.setAttribute("data-theme", newVal ? "dark" : "light");
-
             return { dark: newVal };
         }),
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { API_URL } from "../../config/api";
@@ -15,7 +15,7 @@ export default function VehicleCreate() {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<{ vin?: string; brand?: string; model?: string; year?: string }>({});
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         const eVin = validateVIN(vin);
         const eBrand = validateName(brand);
@@ -40,7 +40,7 @@ export default function VehicleCreate() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [vin, brand, model, year, token, clientId, navigate]);
 
     return (
         <div className="max-w-lg bg-card p-6 rounded shadow">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { API_URL } from "../../config/api";
@@ -15,7 +15,7 @@ export default function OrderDetails() {
     const [itemPrice, setItemPrice] = useState(0);
     const [itemError, setItemError] = useState("");
 
-    const fetchOrder = async () => {
+    const fetchOrder = useCallback(async () => {
         setLoading(true);
         try {
             const res = await fetch(`${API_URL}/orders/${orderId}`, { headers: { Authorization: `Bearer ${token}` } });
@@ -30,11 +30,11 @@ export default function OrderDetails() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [orderId, token, navigate]);
 
-    useEffect(() => { fetchOrder(); }, [orderId]);
+    useEffect(() => { fetchOrder(); }, [fetchOrder]);
 
-    const updateStatus = async (newStatus: string) => {
+    const updateStatus = useCallback(async (newStatus: string) => {
         setStatusUpdating(true);
         try {
             const res = await fetch(`${API_URL}/orders/${orderId}/status`, {
@@ -49,9 +49,9 @@ export default function OrderDetails() {
         } finally {
             setStatusUpdating(false);
         }
-    };
+    }, [orderId, token, fetchOrder]);
 
-    const addItem = async () => {
+    const addItem = useCallback(async () => {
         if (!itemName.trim()) { setItemError("Nazwa wymagana"); return; }
         if (itemQty <= 0) { setItemError("Ilość musi być większa niż 0"); return; }
         if (itemPrice < 0) { setItemError("Cena nie może być ujemna"); return; }
@@ -68,9 +68,9 @@ export default function OrderDetails() {
         } catch (err) {
             console.error(err);
         }
-    };
+    }, [itemName, itemQty, itemPrice, orderId, token, fetchOrder]);
 
-    const deleteItem = async (itemId: number) => {
+    const deleteItem = useCallback(async (itemId: number) => {
         if (!confirm("Usuń pozycję?")) return;
         try {
             const res = await fetch(`${API_URL}/orders/items/${itemId}`, {
@@ -82,7 +82,7 @@ export default function OrderDetails() {
         } catch (err) {
             console.error(err);
         }
-    };
+    }, [token, fetchOrder]);
 
     if (loading) return <div>Ładowanie zlecenia...</div>;
     if (!order) return <div>Brak zlecenia</div>;
@@ -108,13 +108,48 @@ export default function OrderDetails() {
 
             <div className="bg-card p-4 rounded shadow mb-4">
                 <div className="mb-3">
-                    <input className="w-full p-2 border rounded mb-2 bg-card text-main" placeholder="Nazwa części" value={itemName} onChange={(e) => setItemName(e.target.value)} />
-                    <div className="flex gap-2">
-                        <input className="p-2 border rounded w-24 bg-card text-main" type="number" value={itemQty} onChange={(e) => setItemQty(Number(e.target.value))} />
-                        <input className="p-2 border rounded w-36 bg-card text-main" type="number" value={itemPrice} onChange={(e) => setItemPrice(Number(e.target.value))} />
-                        <button className="px-4 py-2 rounded-lg text-white" style={{ backgroundColor: "var(--accent)" }} onClick={addItem}>Dodaj</button>
+                    <label className="block text-sm text-main mb-1">Nazwa części</label>
+                    <input
+                        className="w-full p-2 border rounded mb-4 bg-card text-main"
+                        placeholder="Np. filtr oleju"
+                        value={itemName}
+                        onChange={(e) => setItemName(e.target.value)}
+                    />
+
+                    <div className="flex gap-4 items-end">
+
+                        <div className="flex flex-col">
+                            <label className="text-sm text-main mb-1">Ilość</label>
+                            <input
+                                className="p-2 border rounded w-24 bg-card text-main"
+                                type="number"
+                                value={itemQty}
+                                onChange={(e) => setItemQty(Number(e.target.value))}
+                            />
+                        </div>
+
+                        <div className="flex flex-col">
+                            <label className="text-sm text-main mb-1">Cena (zł)</label>
+                            <input
+                                className="p-2 border rounded w-36 bg-card text-main"
+                                type="number"
+                                value={itemPrice}
+                                onChange={(e) => setItemPrice(Number(e.target.value))}
+                            />
+                        </div>
+
+                        <button
+                            className="px-4 py-2 h-[42px] rounded-lg text-white"
+                            style={{ backgroundColor: "var(--accent)" }}
+                            onClick={addItem}
+                        >
+                            Dodaj
+                        </button>
                     </div>
-                    {itemError && <p className="text-danger text-sm mt-1">{itemError}</p>}
+
+                    {itemError && (
+                        <p className="text-danger text-sm mt-2">{itemError}</p>
+                    )}
                 </div>
 
                 {order.items.length === 0 ? (
@@ -122,20 +157,30 @@ export default function OrderDetails() {
                 ) : (
                     <div className="space-y-2">
                         {order.items.map((it: any) => (
-                            <div key={it.id} className="p-3 border rounded flex justify-between items-center bg-card">
+                            <div
+                                key={it.id}
+                                className="p-3 border rounded flex justify-between items-center bg-card"
+                            >
                                 <div>
                                     <div className="font-medium text-main">{it.name}</div>
                                     <div className="text-sm text-secondary">OE: {it.oeNumber || "-"}</div>
-                                    <div className="text-sm text-secondary">Ilość: {it.quantity} | Cena: {it.price}</div>
+                                    <div className="text-sm text-secondary">
+                                        Ilość: {it.quantity} | Cena: {it.price} zł
+                                    </div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <button className="text-sm" style={{ color: "var(--danger)" }} onClick={() => deleteItem(it.id)}>Usuń</button>
-                                </div>
+                                <button
+                                    className="text-sm"
+                                    style={{ color: "var(--danger)" }}
+                                    onClick={() => deleteItem(it.id)}
+                                >
+                                    Usuń
+                                </button>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+
         </div>
     );
 }

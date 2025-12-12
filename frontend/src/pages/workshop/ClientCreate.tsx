@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { API_URL } from "../../config/api";
@@ -14,7 +14,7 @@ export default function ClientCreate() {
     const token = useAuthStore((s) => s.token);
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         const eName = validateName(name);
         const ePhone = validatePhone(phone);
@@ -25,15 +25,8 @@ export default function ClientCreate() {
         try {
             const res = await fetch(`${API_URL}/clients`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    name,
-                    phone,
-                    email
-                })
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ name, phone, email })
             });
             if (!res.ok) {
                 alert("Nie udało się dodać klienta");
@@ -45,7 +38,7 @@ export default function ClientCreate() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [name, phone, email, token, navigate]);
 
     return (
         <div className="max-w-lg bg-card p-6 rounded shadow">
