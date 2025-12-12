@@ -13,6 +13,7 @@ export default function OrderDetails() {
     const [itemName, setItemName] = useState("");
     const [itemQty, setItemQty] = useState(1);
     const [itemPrice, setItemPrice] = useState(0);
+    const [itemError, setItemError] = useState("");
 
     const fetchOrder = async () => {
         setLoading(true);
@@ -51,7 +52,10 @@ export default function OrderDetails() {
     };
 
     const addItem = async () => {
-        if (!itemName.trim()) { alert("Nazwa wymagana"); return; }
+        if (!itemName.trim()) { setItemError("Nazwa wymagana"); return; }
+        if (itemQty <= 0) { setItemError("Ilość musi być większa niż 0"); return; }
+        if (itemPrice < 0) { setItemError("Cena nie może być ujemna"); return; }
+        setItemError("");
         try {
             const res = await fetch(`${API_URL}/orders/${orderId}/items`, {
                 method: "POST",
@@ -110,6 +114,7 @@ export default function OrderDetails() {
                         <input className="p-2 border rounded w-36 bg-card text-main" type="number" value={itemPrice} onChange={(e) => setItemPrice(Number(e.target.value))} />
                         <button className="px-4 py-2 rounded-lg text-white" style={{ backgroundColor: "var(--accent)" }} onClick={addItem}>Dodaj</button>
                     </div>
+                    {itemError && <p className="text-danger text-sm mt-1">{itemError}</p>}
                 </div>
 
                 {order.items.length === 0 ? (

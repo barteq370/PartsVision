@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { API_URL } from "../../config/api";
+import { validateVIN, validateName, validateYear } from "../../../utils/validators";
 
 export default function VehicleEdit() {
     const { vehicleId } = useParams();
@@ -14,6 +15,7 @@ export default function VehicleEdit() {
     const [year, setYear] = useState("");
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [errors, setErrors] = useState<{ vin?: string; brand?: string; model?: string; year?: string }>({});
 
     const loadVehicle = async () => {
         try {
@@ -40,12 +42,26 @@ export default function VehicleEdit() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const eVin = validateVIN(vin);
+        const eBrand = validateName(brand);
+        const eModel = validateName(model);
+        const eYear = validateYear(year);
+        setErrors({ vin: eVin, brand: eBrand, model: eModel, year: eYear });
+        if (eVin || eBrand || eModel || eYear) return;
         setSaving(true);
         try {
             const res = await fetch(`${API_URL}/vehicles/${vehicleId}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                body: JSON.stringify({ vin, brand, model, year })
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    vin,
+                    brand,
+                    model,
+                    year
+                })
             });
             if (!res.ok) {
                 alert("Nie udało się zapisać zmian.");
@@ -69,21 +85,25 @@ export default function VehicleEdit() {
                 <div>
                     <label className="block text-sm mb-1 text-main">VIN</label>
                     <input className="w-full p-3 border rounded bg-card text-main" value={vin} onChange={(e) => setVin(e.target.value)} required />
+                    {errors.vin && <p className="text-danger text-sm mt-1">{errors.vin}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm mb-1 text-main">Marka</label>
                     <input className="w-full p-3 border rounded bg-card text-main" value={brand} onChange={(e) => setBrand(e.target.value)} required />
+                    {errors.brand && <p className="text-danger text-sm mt-1">{errors.brand}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm mb-1 text-main">Model</label>
                     <input className="w-full p-3 border rounded bg-card text-main" value={model} onChange={(e) => setModel(e.target.value)} required />
+                    {errors.model && <p className="text-danger text-sm mt-1">{errors.model}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm mb-1 text-main">Rok</label>
                     <input className="w-full p-3 border rounded bg-card text-main" value={year} onChange={(e) => setYear(e.target.value)} required />
+                    {errors.year && <p className="text-danger text-sm mt-1">{errors.year}</p>}
                 </div>
 
                 <button className="w-full px-6 py-3 rounded-lg text-white" style={{ backgroundColor: "var(--accent)" }} disabled={saving}>

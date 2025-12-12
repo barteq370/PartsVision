@@ -1,23 +1,34 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { validateEmail, validatePassword } from "../../../utils/validators";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
     const login = useAuthStore((state) => state.login);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const eEmail = validateEmail(email);
+        const ePass = validatePassword(password);
+        setFieldErrors({ email: eEmail, password: ePass });
+        if (eEmail || ePass) return;
         const success = await login(email, password);
         if (!success) {
             setError("Niepoprawny email lub hasło");
             return;
         }
-        navigate("/workshop");
+        if (useAuthStore.getState().user?.role === "USER") {
+            navigate("/setup");
+        } else {
+            navigate("/workshop");
+        }
+
     };
 
     return (
@@ -33,6 +44,7 @@ export default function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    {fieldErrors.email && <p className="text-danger text-sm mt-1">{fieldErrors.email}</p>}
                 </div>
 
                 <div>
@@ -44,6 +56,7 @@ export default function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    {fieldErrors.password && <p className="text-danger text-sm mt-1">{fieldErrors.password}</p>}
                 </div>
 
                 {error && <p className="text-danger text-sm">{error}</p>}

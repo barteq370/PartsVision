@@ -14,8 +14,13 @@ export default function ProtectedRoute({ children, role }: any) {
         return <Navigate to="/login" replace />;
     }
 
+    if (user?.role === "USER") {
+        return <Navigate to="/setup" replace />;
+    }
+
+
     if (role && user?.role !== role) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/setup" replace />;
     }
 
     return children;

@@ -30,10 +30,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/useAuthStore";
 import ClientList from "./pages/workshop/ClientList";
 import VehiclesList from "./pages/workshop/VehicleList";
+import OrderCreate from "./pages/workshop/OrderCreate";
 
-// ------------------------------------------
-// InitAuth - ładuje token + dane użytkownika
-// ------------------------------------------
+
+// InitAuth - token dane użytkownika
 function InitAuth() {
   const initialize = useAuthStore((s) => s.initialize);
 
@@ -44,9 +44,6 @@ function InitAuth() {
   return null;
 }
 
-// ------------------------------------------
-// Routing
-// ------------------------------------------
 const router = createBrowserRouter([
   {
     path: "/",
@@ -59,8 +56,6 @@ const router = createBrowserRouter([
       { path: "setup/workshop", element: <WorkshopSetup /> },
     ],
   },
-
-  // PANEL WARSZTATU
   {
     path: "/workshop",
     element: (
@@ -85,14 +80,12 @@ const router = createBrowserRouter([
 
       // ZLECENIA
       { path: "orders", element: <OrdersList /> },
+      { path: "orders/create", element: <OrderCreate /> },
       { path: "orders/:orderId", element: <OrderDetails /> },
     ],
   },
 ]);
 
-// ------------------------------------------
-// Render
-// ------------------------------------------
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <InitAuth />

@@ -7,7 +7,7 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-    dark: localStorage.getItem("dark") === "true",
+    dark: localStorage.getItem("dark") === "false",
 
     toggle: () =>
         set((state) => {
