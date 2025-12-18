@@ -3,12 +3,6 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function getUserWorkshop(userId: number) {
-    return prisma.workshop.findFirst({
-        where: { userId }
-    });
-}
-
 export const createVehicle = async (req: Request, res: Response) => {
     try {
         const { vin, brand, model, year, clientId } = req.body;
@@ -18,7 +12,9 @@ export const createVehicle = async (req: Request, res: Response) => {
         }
 
         const userId = req.user?.userId;
-        const workshop = await getUserWorkshop(userId);
+        const workshop = await prisma.workshop.findFirst({
+            where: { userId }
+        });
 
         if (!workshop) {
             return res.status(400).json({ message: "Workshop not found" });
@@ -51,7 +47,9 @@ export const getVehiclesByClient = async (req: Request, res: Response) => {
         if (isNaN(clientId)) return res.status(400).json({ message: "Invalid client id" });
 
         const userId = req.user?.userId;
-        const workshop = await getUserWorkshop(userId);
+        const workshop = await prisma.workshop.findFirst({
+            where: { userId }
+        });
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
         const client = await prisma.client.findUnique({ where: { id: clientId } });
@@ -79,7 +77,9 @@ export const getVehicle = async (req: Request, res: Response) => {
         if (isNaN(vehicleId)) return res.status(400).json({ message: "Invalid vehicle id" });
 
         const userId = req.user?.userId;
-        const workshop = await getUserWorkshop(userId);
+        const workshop = await prisma.workshop.findFirst({
+            where: { userId }
+        });
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
         const vehicle = await prisma.vehicle.findUnique({
@@ -108,7 +108,9 @@ export const updateVehicle = async (req: Request, res: Response) => {
         const { vin, brand, model, year } = req.body;
 
         const userId = req.user?.userId;
-        const workshop = await getUserWorkshop(userId);
+        const workshop = await prisma.workshop.findFirst({
+            where: { userId }
+        });
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
         const vehicle = await prisma.vehicle.findUnique({
@@ -145,7 +147,9 @@ export const deleteVehicle = async (req: Request, res: Response) => {
         if (isNaN(vehicleId)) return res.status(400).json({ message: "Invalid vehicle id" });
 
         const userId = req.user?.userId;
-        const workshop = await getUserWorkshop(userId);
+        const workshop = await prisma.workshop.findFirst({
+            where: { userId }
+        });
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
         const vehicle = await prisma.vehicle.findUnique({
@@ -171,8 +175,10 @@ export const deleteVehicle = async (req: Request, res: Response) => {
 
 export const getWorkshopVehicles = async (req: Request, res: Response) => {
     try {
-        const userId = req.user.userId;
-        const workshop = await getUserWorkshop(userId);
+        const userId = req.user?.userId;
+        const workshop = await prisma.workshop.findFirst({
+            where: { userId }
+        });
 
         if (!workshop) {
             return res.status(400).json({ message: "Workshop not found" });
