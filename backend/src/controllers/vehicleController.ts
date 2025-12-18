@@ -4,7 +4,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function getUserWorkshop(userId: number) {
-    return prisma.workshop.findFirst({ where: { userId } });
+    return prisma.workshop.findFirst({
+        where: { userId }
+    });
 }
 
 export const createVehicle = async (req: Request, res: Response) => {
@@ -15,25 +17,30 @@ export const createVehicle = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Missing fields" });
         }
 
-        const userId = req.user!.userId; // <— Gwarantujemy że istnieje
-
+        const userId = req.user?.userId;
         const workshop = await getUserWorkshop(userId);
-        if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
-        const client = await prisma.client.findUnique({ where: { id: Number(clientId) } });
+        if (!workshop) {
+            return res.status(400).json({ message: "Workshop not found" });
+        }
+
+        const client = await prisma.client.findUnique({ where: { id: clientId } });
         if (!client) return res.status(404).json({ message: "Client not found" });
 
-        if (client.workshopId !== workshop.id) return res.status(403).json({ message: "Forbidden" });
+        if (client.workshopId !== workshop.id) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
         const existVin = await prisma.vehicle.findUnique({ where: { vin } });
         if (existVin) return res.status(409).json({ message: "VIN already exists" });
 
         const created = await prisma.vehicle.create({
-            data: { vin, brand, model, year, clientId: Number(clientId) }
+            data: { vin, brand, model, year, clientId }
         });
 
         return res.status(201).json(created);
     } catch (err) {
+        console.error("createVehicle error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -43,15 +50,16 @@ export const getVehiclesByClient = async (req: Request, res: Response) => {
         const clientId = Number(req.params.clientId);
         if (isNaN(clientId)) return res.status(400).json({ message: "Invalid client id" });
 
-        const userId = req.user!.userId;
-
+        const userId = req.user?.userId;
         const workshop = await getUserWorkshop(userId);
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
         const client = await prisma.client.findUnique({ where: { id: clientId } });
         if (!client) return res.status(404).json({ message: "Client not found" });
 
-        if (client.workshopId !== workshop.id) return res.status(403).json({ message: "Forbidden" });
+        if (client.workshopId !== workshop.id) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
         const vehicles = await prisma.vehicle.findMany({
             where: { clientId },
@@ -60,6 +68,7 @@ export const getVehiclesByClient = async (req: Request, res: Response) => {
 
         return res.json(vehicles);
     } catch (err) {
+        console.error("getVehiclesByClient error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -69,8 +78,7 @@ export const getVehicle = async (req: Request, res: Response) => {
         const vehicleId = Number(req.params.vehicleId);
         if (isNaN(vehicleId)) return res.status(400).json({ message: "Invalid vehicle id" });
 
-        const userId = req.user!.userId;
-
+        const userId = req.user?.userId;
         const workshop = await getUserWorkshop(userId);
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
@@ -81,10 +89,13 @@ export const getVehicle = async (req: Request, res: Response) => {
 
         if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
 
-        if (vehicle.client.workshopId !== workshop.id) return res.status(403).json({ message: "Forbidden" });
+        if (vehicle.client.workshopId !== workshop.id) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
         return res.json(vehicle);
     } catch (err) {
+        console.error("getVehicle error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -96,8 +107,7 @@ export const updateVehicle = async (req: Request, res: Response) => {
 
         const { vin, brand, model, year } = req.body;
 
-        const userId = req.user!.userId;
-
+        const userId = req.user?.userId;
         const workshop = await getUserWorkshop(userId);
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
@@ -108,7 +118,9 @@ export const updateVehicle = async (req: Request, res: Response) => {
 
         if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
 
-        if (vehicle.client.workshopId !== workshop.id) return res.status(403).json({ message: "Forbidden" });
+        if (vehicle.client.workshopId !== workshop.id) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
         if (vin && vin !== vehicle.vin) {
             const exists = await prisma.vehicle.findUnique({ where: { vin } });
@@ -122,6 +134,7 @@ export const updateVehicle = async (req: Request, res: Response) => {
 
         return res.json(updated);
     } catch (err) {
+        console.error("updateVehicle error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -131,8 +144,7 @@ export const deleteVehicle = async (req: Request, res: Response) => {
         const vehicleId = Number(req.params.vehicleId);
         if (isNaN(vehicleId)) return res.status(400).json({ message: "Invalid vehicle id" });
 
-        const userId = req.user!.userId;
-
+        const userId = req.user?.userId;
         const workshop = await getUserWorkshop(userId);
         if (!workshop) return res.status(400).json({ message: "Workshop not found" });
 
@@ -143,13 +155,49 @@ export const deleteVehicle = async (req: Request, res: Response) => {
 
         if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
 
-        if (vehicle.client.workshopId !== workshop.id) return res.status(403).json({ message: "Forbidden" });
+        if (vehicle.client.workshopId !== workshop.id) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
         await prisma.order.deleteMany({ where: { vehicleId } });
         await prisma.vehicle.delete({ where: { id: vehicleId } });
 
         return res.status(204).send();
     } catch (err) {
+        console.error("deleteVehicle error:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+export const getWorkshopVehicles = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user.userId;
+        const workshop = await getUserWorkshop(userId);
+
+        if (!workshop) {
+            return res.status(400).json({ message: "Workshop not found" });
+        }
+
+        const q = (req.query.q as string) ?? "";
+
+        const vehicles = await prisma.vehicle.findMany({
+            where: {
+                client: { workshopId: workshop.id },
+                ...(q && {
+                    OR: [
+                        { vin: { contains: q.toLocaleLowerCase() } },
+                        { brand: { contains: q.toLocaleLowerCase() } },
+                        { model: { contains: q.toLocaleLowerCase() } }
+                    ]
+                })
+            },
+            include: { client: true },
+            orderBy: { id: "desc" }
+        });
+
+        return res.json(vehicles);
+    } catch (err) {
+        console.error("getWorkshopVehicles error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
