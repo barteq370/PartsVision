@@ -54,7 +54,7 @@ Projekt jest w pełni responsywny, posiada tryb ciemny/jasny i autoryzację JWT.
 
 ### 1. Sklonuj repozytorium:
 ```bash
-git clone https://github.com/twoje-repo/partsvision.git
+git clone https://github.com/barteq370/partsvision.git
 cd partsvision/frontend
 ```
 ### 2. Zainstaluj zależności:
