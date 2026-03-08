@@ -18,7 +18,7 @@ export default function Landing() {
 
                     <div className="flex justify-center gap-4">
                         <Link
-                            to="/register"
+                            to="https://docs.google.com/presentation/d/1uRe2cJK0oHNsBZ-8tpL4K7XUiJZnjN2TmSNe4jXmVxY/edit?slide=id.p#slide=id.p"
                             className="px-7 py-3 rounded-lg text-lg text-white"
                             style={{ backgroundColor: "var(--accent)" }}
                             onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "var(--accent-hover)")}
